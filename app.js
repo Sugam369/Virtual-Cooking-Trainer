@@ -1,4 +1,4 @@
-window.addEventListener('DOMContentLoaded', async function () { // make it async
+window.addEventListener('DOMContentLoaded', async function () {
 
     const canvas = document.getElementById("renderCanvas");
     const engine = new BABYLON.Engine(canvas, true);
@@ -39,10 +39,10 @@ window.addEventListener('DOMContentLoaded', async function () { // make it async
     panMat.diffuseColor = new BABYLON.Color3(0.1, 0.1, 0.1); // dark grey
     pan.material = panMat;
 
-    // Start a WebXR session 
+    // Start a WebXR VR session 
     const xr = await scene.createDefaultXRExperienceAsync({
         uiOptions: {
-            sessionMode: "immersive-ar",
+            sessionMode: "immersive-vr",
             // Set the referenceSpaceType to "unbounded" - since the headset is in passthrough mode with AR, let the vistor go anywhere they like within their physical space
             referenceSpaceType: "local-floor" //  viewer, local, local-floor, bounded-floor, or unbounded (https://developer.mozilla.org/en-US/docs/Web/API/XRReferenceSpace and https://gist.github.com/lempa/64b3a89a19cbec980ade709be35d7cbc#file-webxr-reference-space-types-csv)
 
