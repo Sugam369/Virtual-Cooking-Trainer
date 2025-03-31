@@ -1,4 +1,5 @@
-window.addEventListener('DOMContentLoaded', function () {
+window.addEventListener('DOMContentLoaded', async function () { // make it async
+
     const canvas = document.getElementById("renderCanvas");
     const engine = new BABYLON.Engine(canvas, true);
 
@@ -31,14 +32,26 @@ window.addEventListener('DOMContentLoaded', function () {
     counterMat.diffuseColor = new BABYLON.Color3(0.5, 0.3, 0.2); // darker wood
     counter.material = counterMat;
 
-    //Utensil on Counter
+    // Utensil on Counter
     const pan = BABYLON.MeshBuilder.CreateCylinder("pan", { diameter: 0.3, height: 0.05, tessellation: 32 }, scene);
     pan.position.set(0, 0.95, 0); // sitting on top of the counter
     const panMat = new BABYLON.StandardMaterial("panMat", scene);
     panMat.diffuseColor = new BABYLON.Color3(0.1, 0.1, 0.1); // dark grey
     pan.material = panMat;
 
-    // Render
+    // Start a WebXR session 
+    const xr = await scene.createDefaultXRExperienceAsync({
+        uiOptions: {
+            sessionMode: "immersive-ar",
+            // Set the referenceSpaceType to "unbounded" - since the headset is in passthrough mode with AR, let the vistor go anywhere they like within their physical space
+            referenceSpaceType: "local-floor" //  viewer, local, local-floor, bounded-floor, or unbounded (https://developer.mozilla.org/en-US/docs/Web/API/XRReferenceSpace and https://gist.github.com/lempa/64b3a89a19cbec980ade709be35d7cbc#file-webxr-reference-space-types-csv)
+
+        },
+        // Enable optional features - either all of them with true (boolean), or as an array
+        optionalFeatures: true
+    });
+
+    // Render Loop
     engine.runRenderLoop(() => {
         scene.render();
     });
@@ -46,4 +59,5 @@ window.addEventListener('DOMContentLoaded', function () {
     window.addEventListener("resize", () => {
         engine.resize();
     });
+
 });
