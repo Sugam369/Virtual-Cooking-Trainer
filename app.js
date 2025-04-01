@@ -25,7 +25,7 @@ window.addEventListener('DOMContentLoaded', async function () {
     //Custom Floor with Texture
     const floor = BABYLON.MeshBuilder.CreateGround("floor", { width: 10, height: 10 }, scene);
     const floorMat = new BABYLON.StandardMaterial("floorMat", scene);
-    floorMat.diffuseTexture = new BABYLON.Texture("./Textures/WoodFloor.jpg", scene);
+    floorMat.diffuseTexture = new BABYLON.Texture("./Textures/Floor.jpg", scene);
     floorMat.diffuseTexture.uScale = 4;
     floorMat.diffuseTexture.vScale = 4;
     floor.material = floorMat;
@@ -76,7 +76,7 @@ window.addEventListener('DOMContentLoaded', async function () {
     });
 
     advancedTexture.addControl(button);
-
+    
         //WebXR Setup
         const xr = await scene.createDefaultXRExperienceAsync({
             uiOptions: {
