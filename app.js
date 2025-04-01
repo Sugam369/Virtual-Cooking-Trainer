@@ -1,11 +1,17 @@
 window.addEventListener('DOMContentLoaded', async function () {
-
     const canvas = document.getElementById("renderCanvas");
     const engine = new BABYLON.Engine(canvas, true);
-
-    // Scene
     const scene = new BABYLON.Scene(engine);
-    scene.clearColor = new BABYLON.Color3(0.85, 0.92, 0.98); // soft sky color
+
+    // Skybox
+    const skybox = BABYLON.MeshBuilder.CreateBox("skyBox", { size: 500 }, scene);
+    const skyboxMaterial = new BABYLON.StandardMaterial("skyBoxMat", scene);
+    skyboxMaterial.backFaceCulling = false;
+    skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("https://assets.babylonjs.com/environments/skybox", scene);
+    skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+    skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+    skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+    skybox.material = skyboxMaterial;
 
     // Camera
     const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(0, 1.6, -4), scene);
@@ -19,7 +25,7 @@ window.addEventListener('DOMContentLoaded', async function () {
     dirLight.position = new BABYLON.Vector3(5, 5, 5);
     dirLight.intensity = 1;
 
-    // Floor (Wooden Style)
+    // Floor
     const floor = BABYLON.MeshBuilder.CreateGround("floor", { width: 10, height: 10 }, scene);
     const floorMat = new BABYLON.StandardMaterial("floorMat", scene);
     floorMat.diffuseColor = new BABYLON.Color3(0.72, 0.52, 0.39); // wooden brown
@@ -43,12 +49,7 @@ window.addEventListener('DOMContentLoaded', async function () {
     const xr = await scene.createDefaultXRExperienceAsync({
         uiOptions: {
             sessionMode: "immersive-vr",
-            // Set the referenceSpaceType to "unbounded" - since the headset is in passthrough mode with AR, let the vistor go anywhere they like within their physical space
-            referenceSpaceType: "local-floor" //  viewer, local, local-floor, bounded-floor, or unbounded (https://developer.mozilla.org/en-US/docs/Web/API/XRReferenceSpace and https://gist.github.com/lempa/64b3a89a19cbec980ade709be35d7cbc#file-webxr-reference-space-types-csv)
-
-        },
-        // Enable optional features - either all of them with true (boolean), or as an array
-        optionalFeatures: true
+        }
     });
 
     // Render Loop
