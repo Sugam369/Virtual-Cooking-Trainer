@@ -77,12 +77,6 @@ window.addEventListener('DOMContentLoaded', async function () {
 
     advancedTexture.addControl(button);
     
-        //WebXR Setup
-        const xr = await scene.createDefaultXRExperienceAsync({
-            uiOptions: {
-                sessionMode: "immersive-vr",
-            }
-        });
 
     //Render Loop
     engine.runRenderLoop(() => {
