@@ -30,6 +30,27 @@ window.addEventListener('DOMContentLoaded', async function () {
     floorMat.diffuseTexture.vScale = 4;
     floor.material = floorMat;
 
+    BABYLON.SceneLoader.ImportMesh(
+        "",
+        "./model/",
+        "Man.glb",
+        scene,
+        function (meshes) {
+          const man = meshes[0];
+      
+          //Place behind the counter
+          man.position.set(0, 0, 1);
+          man.scaling = new BABYLON.Vector3(0.4, 0.4, 0.4);
+          man.rotation.y = Math.PI;
+          man.getChildMeshes().forEach((mesh) => {
+            if (mesh.material) {
+              mesh.material.emissiveColor = new BABYLON.Color3(0.2, 0.2, 0.2); // Soft lighting effect
+              mesh.material.diffuseColor = mesh.material.diffuseColor || new BABYLON.Color3(0.8, 0.6, 0.5); // fallback skin tone
+            }
+            mesh.isVisible = true;
+          });
+        });
+
     //Kitchen Counter with Texture
     const counter = BABYLON.MeshBuilder.CreateBox("counter", { width: 2, height: 0.9, depth: 0.6 }, scene);
     counter.position.set(0, 0.45, 0);
