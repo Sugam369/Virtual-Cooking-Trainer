@@ -142,6 +142,37 @@ spoon.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
   ceiling.position.set(0, 3, 0);
   ceiling.material = wallMat;
 
+  //(Cooking Screen)
+const monitor = BABYLON.MeshBuilder.CreatePlane("monitor", {
+    width: 2.5,
+    height: 1.4
+}, scene);
+
+// Position it slightly in front of the back wall
+monitor.position.set(0, 2, 4.94);
+monitor.rotation.y = Math.PI;
+
+const monitorMat = new BABYLON.StandardMaterial("monitorMat", scene);
+monitorMat.diffuseTexture = new BABYLON.Texture("./Textures/CookingDisplay.jpg", scene);
+monitorMat.emissiveColor = new BABYLON.Color3(1, 1, 1);
+monitorMat.backFaceCulling = false;
+
+monitor.material = monitorMat;
+
+//Fridge
+BABYLON.SceneLoader.ImportMesh(
+    "",
+    "./model/",
+    "Fridge.glb",
+    scene,
+    function (meshes) {
+      const fridge = meshes[0];
+     fridge.position.set(-1.8, 0, 2.2);
+     fridge.scaling = new BABYLON.Vector3(1.2, 1.2, 1.2);
+     fridge.rotation.y = Math.PI;
+  
+    });
+  //Table on the right side
 
     //GUI: Start Cooking Button
     const advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
