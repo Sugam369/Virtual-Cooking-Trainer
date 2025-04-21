@@ -10,12 +10,12 @@ window.addEventListener('DOMContentLoaded', async function () {
         groundColor: new BABYLON.Color3(0.5, 0.5, 0.5)
     });
     if (environment) {
-        environment.setMainColor(new BABYLON.Color3(0.5, 0.8, 1.0)); 
+        environment.setMainColor(new BABYLON.Color3(0.5, 0.8, 1.0));
+        environment.ground.setEnabled(false);
     }
-    environment.ground.setEnabled(false);
 
     //Camera
-    const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(0, 1.6, -4), scene);
+    const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(0, 1.6, -2), scene);
     camera.attachControl(canvas, true);
 
     //Lights
@@ -39,7 +39,7 @@ window.addEventListener('DOMContentLoaded', async function () {
           const man = meshes[0];
       
           //Place behind the counter
-          man.position.set(0, 0, 1);
+          man.position.set(0, 0, 2);
           man.scaling = new BABYLON.Vector3(0.4, 0.4, 0.4);
           man.rotation.y = Math.PI;
           man.getChildMeshes().forEach((mesh) => {
@@ -50,34 +50,70 @@ window.addEventListener('DOMContentLoaded', async function () {
             mesh.isVisible = true;
           });
         });
+      
 
     //Kitchen Counter with Texture
     const counter = BABYLON.MeshBuilder.CreateBox("counter", { width: 2, height: 0.9, depth: 0.6 }, scene);
-    counter.position.set(0, 0.45, 0);
+    counter.position.set(0, 0.45, 1);
     const counterMat = new BABYLON.StandardMaterial("counterMat", scene);
     counterMat.diffuseTexture = new BABYLON.Texture("./Textures/Wood.jpg", scene);
     counter.material = counterMat;
 
-    //Pan with Texture
-    const pan = BABYLON.MeshBuilder.CreateCylinder("pan", { diameter: 0.3, height: 0.05, tessellation: 32 }, scene);
-    pan.position.set(0, 0.95, 0);
-    const panMat = new BABYLON.StandardMaterial("panMat", scene);
-    panMat.diffuseTexture = new BABYLON.Texture("./Textures/Metal.jpg", scene);
-    pan.material = panMat;
+    //Microwave 
+    BABYLON.SceneLoader.ImportMesh(
+        "",
+        "./model/",
+        "KitchenMicrowave.glb",
+        scene,
+        function (meshes) {
+          const microwave = meshes[0];
+          microwave.position.set(-0.5, 0.96, 1);
+          microwave.rotation = new BABYLON.Vector3(0, 0, 0);
+          microwave.scaling = new BABYLON.Vector3(1.5, 1.5, 1.5);
+        });
+      
+    //Pan (realistic look with a handle)
+const panBody = BABYLON.MeshBuilder.CreateCylinder("panBody", { diameter: 0.4, height: 0.05 }, scene);
+panBody.position.set(0, 0.95, 1);
+const panBodyMat = new BABYLON.StandardMaterial("panBodyMat", scene);
+panBodyMat.diffuseTexture = new BABYLON.Texture("./Textures/Metal.jpg", scene);
+panBody.material = panBodyMat;
 
-    //Spoon
-    const spoon = BABYLON.MeshBuilder.CreateBox("spoon", { width: 0.05, height: 0.02, depth: 0.3 }, scene);
-    spoon.position.set(0.5, 0.97, 0);
-    const spoonMat = new BABYLON.StandardMaterial("spoonMat", scene);
-    spoonMat.diffuseTexture = new BABYLON.Texture("./Textures/Metal.jpg", scene);
-    spoon.material = spoonMat;
+const panHandle = BABYLON.MeshBuilder.CreateBox("panHandle", { width: 0.02, height: 0.02, depth: 0.3 }, scene);
+panHandle.position.set(0, 0.97, 1.25);
+const handleMat = new BABYLON.StandardMaterial("handleMat", scene);
+handleMat.diffuseColor = new BABYLON.Color3(0, 0, 0); // black
+panHandle.material = handleMat;
 
-    //Pan Interaction
-    pan.actionManager = new BABYLON.ActionManager(scene);
-    pan.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
-        BABYLON.ActionManager.OnPickTrigger,
-        () => { pan.rotation.y += 0.3; }
-    ));
+const pan = BABYLON.Mesh.MergeMeshes([panBody, panHandle], true);
+
+//Spoon (like a ladle using cylinder + sphere)
+const spoonHandle = BABYLON.MeshBuilder.CreateCylinder("spoonHandle", { diameter: 0.02, height: 0.25 }, scene);
+spoonHandle.position.set(0.5, 0.97, 1);
+spoonHandle.rotation.z = Math.PI / 4;
+const spoonHandleMat = new BABYLON.StandardMaterial("spoonHandleMat", scene);
+spoonHandleMat.diffuseTexture = new BABYLON.Texture("./Textures/Metal.jpg", scene);
+spoonHandle.material = spoonHandleMat;
+
+const spoonHead = BABYLON.MeshBuilder.CreateSphere("spoonHead", { diameter: 0.07 }, scene);
+spoonHead.position.set(0.62, 0.9, 1.12);
+spoonHead.material = spoonHandleMat;
+
+const spoon = BABYLON.Mesh.MergeMeshes([spoonHandle, spoonHead], true);
+
+
+//Spoon interaction (highlight on click)
+spoon.actionManager = new BABYLON.ActionManager(scene);
+spoon.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
+    BABYLON.ActionManager.OnPickTrigger,
+    () => {
+        spoon.material.emissiveColor = BABYLON.Color3.Random();
+        setTimeout(() => {
+            spoon.material.emissiveColor = BABYLON.Color3.Black();
+        }, 300);
+    }
+));
+
 
     //GUI: Start Cooking Button
     const advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
