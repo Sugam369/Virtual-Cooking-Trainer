@@ -114,6 +114,34 @@ spoon.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
     }
 ));
 
+  //Enclosed Room (walls + ceiling + door opening)
+  const wallMat = new BABYLON.StandardMaterial("wallMat", scene);
+  wallMat.diffuseColor = new BABYLON.Color3(0.95, 0.95, 1.0);
+
+  const wallBack = BABYLON.MeshBuilder.CreateBox("wallBack", { width: 10, height: 3, depth: 0.1 }, scene);
+  wallBack.position.set(0, 1.5, 5);
+  wallBack.material = wallMat;
+
+  const wallLeft = BABYLON.MeshBuilder.CreateBox("wallLeft", { width: 0.1, height: 3, depth: 10 }, scene);
+  wallLeft.position.set(-5, 1.5, 0);
+  wallLeft.material = wallMat;
+
+  const wallRight = BABYLON.MeshBuilder.CreateBox("wallRight", { width: 0.1, height: 3, depth: 10 }, scene);
+  wallRight.position.set(5, 1.5, 0);
+  wallRight.material = wallMat;
+
+  const wallFrontLeft = BABYLON.MeshBuilder.CreateBox("wallFrontLeft", { width: 3, height: 3, depth: 0.1 }, scene);
+  wallFrontLeft.position.set(-3.5, 1.5, -5);
+  wallFrontLeft.material = wallMat;
+
+  const wallFrontRight = BABYLON.MeshBuilder.CreateBox("wallFrontRight", { width: 3, height: 3, depth: 0.1 }, scene);
+  wallFrontRight.position.set(3.5, 1.5, -5);
+  wallFrontRight.material = wallMat;
+
+  const ceiling = BABYLON.MeshBuilder.CreateBox("ceiling", { width: 10, height: 0.1, depth: 10 }, scene);
+  ceiling.position.set(0, 3, 0);
+  ceiling.material = wallMat;
+
 
     //GUI: Start Cooking Button
     const advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
