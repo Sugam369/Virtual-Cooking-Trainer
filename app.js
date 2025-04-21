@@ -173,6 +173,40 @@ BABYLON.SceneLoader.ImportMesh(
   
     });
   //Table on the right side
+  BABYLON.SceneLoader.ImportMesh(
+    "",
+    "./model/",
+    "Table.glb",
+    scene,
+    function (meshes) {
+      const table = meshes[0];
+      table.position.set(2, 0, 1.5); // X=right side, Y=on floor, Z=near counter
+      table.scaling = new BABYLON.Vector3(.5, .5, .5); // Adjust size 
+      table.rotation.y = 0;
+  
+    });
+  
+//WineTable on the left side
+BABYLON.SceneLoader.ImportMesh(
+    "",
+    "./model/",
+    "WineTable.glb",
+    scene,
+    function (meshes) {
+      const wineTable = meshes[0];
+      wineTable.position.set(-1.5, 0.7, 1); // X = left, Z = mid-room
+      wineTable.scaling = new BABYLON.Vector3(.5, .5, .5); // Adjust size
+      wineTable.rotation.y = Math.PI / 2;
+  
+      //For Visiliblity
+      wineTable.getChildMeshes().forEach((mesh) => {
+        if (mesh.material) {
+          mesh.material.emissiveColor = new BABYLON.Color3(0.2, 0.2, 0.2);
+          mesh.material.alpha = 1;
+        }
+        mesh.isVisible = true;
+      });
+    });
 
     //GUI: Start Cooking Button
     const advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
